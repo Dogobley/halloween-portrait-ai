@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transformation Result</title>
+    <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    <h1>Image Transformation Result</h1>
+    <h2>Original Image</h2>
+    <img src="{{ original_url }}" alt="Original Image" width="300">
+
+    {% if error_message %}
+    <h2>Error</h2>
+    <p>{{ error_message }}</p>
+    {% else %}
+    <h2>Final Transformed Image</h2>
+    <div id="skeleton-loader" style="display: flex; justify-content: center; align-items: center;">
+        <div class="skeleton">
+            <svg width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="0" y="0" width="24" height="24" rx="4" ry="4" stroke="#aaaaaa" stroke-width="2" fill="#aaaaaa">
+                </rect>
+                <circle cx="18" cy="7" r="1" stroke="#aaaaaa" stroke-width="2" stroke-linecap="round" fill="#e0e0e0" />
+                <path
+                    d="M5.18601 18H14.814C15.7609 18 16.3348 16.9546 15.8264 16.1557L11.0124 8.5909C10.5408 7.84991 9.45915 7.84991 8.98761 8.59091L4.17361 16.1557C3.66524 16.9546 4.2391 18 5.18601 18Z"
+                    fill="#b3b3b3" />
+                <path
+                    d="M12.2422 18H19.7578C20.7162 18 21.2879 16.9318 20.7562 16.1344L16.9985 10.4977C16.5235 9.78521 15.4765 9.78521 15.0015 10.4977L11.2438 16.1344C10.7121 16.9318 11.2838 18 12.2422 18Z"
+                    fill="#b3b3b3" />
+            </svg>
+        </div>
+    </div>
+    <img id="cloudinary-id" alt="Final Transformed Image" width="300">
+    <script>
+        resImg = "{{ final_image_url }}"
+
+        resImg = resImg.replace("b&#39;", "")
+        resImg = resImg.replace("&#39;", "")
+        document.getElementById("cloudinary-id").src = "data:image/png;base64," + resImg;
+    </script>
+    {% endif %}
+
+    <div id="shareButtons" style="display: none; margin-top: 20px;">
+        <h3>Share your spooky transformation:</h3>
+        <div class="st-btn st-first" data-network="facebook" style="display: inline-block;" onclick="shareFacebook()">
+            <img alt="facebook sharing button" src="https://platform-cdn.sharethis.com/img/facebook.svg">
+            <span class="st-label">Share</span>
+        </div>
+        <div class="st-btn" data-network="twitter" style="display: inline-block;" onclick="shareTwitter()">
+            <img alt="twitter sharing button" src="https://platform-cdn.sharethis.com/img/twitter.svg">
+            <span class="st-label">Tweet</span>
+        </div>
+        <div class="st-btn" data-network="email" style="display: inline-block;" onclick="shareEmail()">
+            <img alt="email sharing button" src="https://platform-cdn.sharethis.com/img/email.svg">
+            <span class="st-label">Email</span>
+        </div>
+        <div class="st-btn" data-network="whatsapp" style="display: inline-block;" onclick="shareWhatsApp()">
+            <img alt="whatsapp sharing button" src="https://platform-cdn.sharethis.com/img/whatsapp.svg">
+            <span class="st-label">Share</span>
+        </div>
+        <div class="st-btn st-last" data-network="sharethis" style="display: inline-block;" onclick="copyLink()">
+            <img alt="sharethis sharing button" src="https://platform-cdn.sharethis.com/img/sharethis.svg">
+            <span class="st-label">Share</span>
+        </div>
+    </div>
+
+    <script>
+        function shareTwitter() {
+            var text = "Check out my spooky Halloween transformation!";
+            var url = "{{ final_image_url }}";
+            var hashtags = "HalloweenTransformation,SpookyAI";
+            var via = "YourAppName";
+            window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${url}&hashtags=${hashtags}&via=${via}`, "_blank", "width=550,height=420");
+        }
+
+        function shareFacebook() {
+            var url = "{{ final_image_url }}";
+            window.open("https://www.facebook.com/sharer/sharer.php?u=" + url, "_blank");
+        }
+
+        function copyLink() {
+            var dummy = document.createElement("input");
+            document.body.appendChild(dummy);
+            dummy.value = "{{ final_image_url }}";
+            dummy.select();
+            document.execCommand("copy");
+            document.body.removeChild(dummy);
+            alert("Link copied to clipboard!");
+        }
+
+        function shareEmail() {
+            var subject = "Check out my spooky Halloween transformation!";
+            var body = "I just created this spooky Halloween transformation! Check it out: {{ final_image_url }}";
+            window.location.href = "mailto:?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
+        }
+
+        function shareWhatsApp() {
+            var text = "Check out my spooky Halloween transformation! {{ final_image_url }}";
+            window.open("https://wa.me/?text=" + encodeURIComponent(text), "_blank");
+        }
+    </script>
+
+    <div id="loading" style="display: none;">
+        <p id="loadingMessage"></p>
+    </div>
+
+    <button id="tryAnotherButton">
+        <span id="buttonText">Try Another Image</span>
+    </button>
+
+    <script src="{{ url_for('static', filename='result.js') }}"></script>
+</body>
+
+</html>

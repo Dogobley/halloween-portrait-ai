@@ -1,0 +1,17 @@
+*.png
+*.jpg
+*.jpeg
+*.webp
+*.env
+*.log
+*.txt
+*.csv
+*.json
+
+*old.*
+!requirements.txt
+!image.png
+
+.venv
+node_modules
+tailwind.config.js
